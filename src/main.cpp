@@ -13,7 +13,8 @@ using Eigen::MatrixXd;
 using Eigen::VectorXd;
 using std::vector;
 
-void check_arguments(int argc, char* argv[]) {
+void check_arguments(int argc, char *argv[])
+{
   string usage_instructions = "Usage instructions: ";
   usage_instructions += argv[0];
   usage_instructions += " path/to/input.txt output.txt";
@@ -21,35 +22,49 @@ void check_arguments(int argc, char* argv[]) {
   bool has_valid_args = false;
 
   // make sure the user has provided input and output files
-  if (argc == 1) {
+  if (argc == 1)
+  {
     cerr << usage_instructions << endl;
-  } else if (argc == 2) {
-    cerr << "Please include an output file.\n" << usage_instructions << endl;
-  } else if (argc == 3) {
+  }
+  else if (argc == 2)
+  {
+    cerr << "Please include an output file.\n"
+         << usage_instructions << endl;
+  }
+  else if (argc == 3)
+  {
     has_valid_args = true;
-  } else if (argc > 3) {
-    cerr << "Too many arguments.\n" << usage_instructions << endl;
+  }
+  else if (argc > 3)
+  {
+    cerr << "Too many arguments.\n"
+         << usage_instructions << endl;
   }
 
-  if (!has_valid_args) {
+  if (!has_valid_args)
+  {
     exit(EXIT_FAILURE);
   }
 }
 
-void check_files(ifstream& in_file, string& in_name,
-                 ofstream& out_file, string& out_name) {
-  if (!in_file.is_open()) {
+void check_files(ifstream &in_file, string &in_name,
+                 ofstream &out_file, string &out_name)
+{
+  if (!in_file.is_open())
+  {
     cerr << "Cannot open input file: " << in_name << endl;
     exit(EXIT_FAILURE);
   }
 
-  if (!out_file.is_open()) {
+  if (!out_file.is_open())
+  {
     cerr << "Cannot open output file: " << out_name << endl;
     exit(EXIT_FAILURE);
   }
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[])
+{
 
   check_arguments(argc, argv);
 
@@ -68,7 +83,8 @@ int main(int argc, char* argv[]) {
 
   // prep the measurement packages (each line represents a measurement at a
   // timestamp)
-  while (getline(in_file_, line)) {
+  while (getline(in_file_, line))
+  {
 
     string sensor_type;
     MeasurementPackage meas_package;
@@ -78,7 +94,8 @@ int main(int argc, char* argv[]) {
 
     // reads first element from the current line
     iss >> sensor_type;
-    if (sensor_type.compare("L") == 0) {
+    if (sensor_type.compare("L") == 0)
+    {
       // LASER MEASUREMENT
 
       // read measurements at this timestamp
@@ -92,7 +109,9 @@ int main(int argc, char* argv[]) {
       iss >> timestamp;
       meas_package.timestamp_ = timestamp;
       measurement_pack_list.push_back(meas_package);
-    } else if (sensor_type.compare("R") == 0) {
+    }
+    else if (sensor_type.compare("R") == 0)
+    {
       // RADAR MEASUREMENT
 
       // read measurements at this timestamp
@@ -133,7 +152,8 @@ int main(int argc, char* argv[]) {
 
   //Call the EKF-based fusion
   size_t N = measurement_pack_list.size();
-  for (size_t k = 0; k < N; ++k) {
+  for (size_t k = 0; k < N; ++k)
+  {
     // start filtering from the second frame (the speed is unknown in the first
     // frame)
     fusionEKF.ProcessMeasurement(measurement_pack_list[k]);
@@ -145,11 +165,14 @@ int main(int argc, char* argv[]) {
     out_file_ << fusionEKF.ekf_.x_(3) << "\t";
 
     // output the measurements
-    if (measurement_pack_list[k].sensor_type_ == MeasurementPackage::LASER) {
+    if (measurement_pack_list[k].sensor_type_ == MeasurementPackage::LASER)
+    {
       // output the estimation
       out_file_ << measurement_pack_list[k].raw_measurements_(0) << "\t";
       out_file_ << measurement_pack_list[k].raw_measurements_(1) << "\t";
-    } else if (measurement_pack_list[k].sensor_type_ == MeasurementPackage::RADAR) {
+    }
+    else if (measurement_pack_list[k].sensor_type_ == MeasurementPackage::RADAR)
+    {
       // output the estimation in the cartesian coordinates
       float ro = measurement_pack_list[k].raw_measurements_(0);
       float phi = measurement_pack_list[k].raw_measurements_(1);
@@ -169,14 +192,17 @@ int main(int argc, char* argv[]) {
 
   // compute the accuracy (RMSE)
   Tools tools;
-  cout << "Accuracy - RMSE:" << endl << tools.CalculateRMSE(estimations, ground_truth) << endl;
+  cout << "Accuracy - RMSE:" << endl
+       << tools.CalculateRMSE(estimations, ground_truth) << endl;
 
   // close files
-  if (out_file_.is_open()) {
+  if (out_file_.is_open())
+  {
     out_file_.close();
   }
 
-  if (in_file_.is_open()) {
+  if (in_file_.is_open())
+  {
     in_file_.close();
   }
 
