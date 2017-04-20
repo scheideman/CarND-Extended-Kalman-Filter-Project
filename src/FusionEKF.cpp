@@ -122,14 +122,14 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 	ekf_.F_(1,3) = dt;
 	//2. Set the process covariance matrix Q
 	MatrixXd G =  MatrixXd(4, 2);
-	G << pow(dt,2)/2, 0,
-	     0, pow(dt,2)/2,
+	G << (dt * dt)/2, 0,
+	     0, (dt*dt)/2,
 	     dt, 0,
 	     0, dt;
 	MatrixXd Qv = MatrixXd(2,2);
 	Qv << noise_ax, 0,
 	      0, noise_ay;
-	      
+
 	ekf_.Q_ = G * Qv * G.transpose();
   ekf_.Predict();
 
