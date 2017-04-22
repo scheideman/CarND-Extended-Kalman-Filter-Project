@@ -3,7 +3,7 @@ Self-Driving Car Engineer Nanodegree Program
 
 ---
 ## Summary
-This project implements a Extended Kalman filter to perform sensor fusion for estimating the state of a moving object. The Extended Kalman Filter allows for incorporating non-linear prediction and measurement models into the gaussian state estimation using the first order taylor series expansion of each function; as a result, you have to calculate the Jacobian for each non-linear predition or measurement function. The sensors used are radar and lidar. Although normally you have to detect the object of interest in the laser or radar measurement, for this project the measurements provided are already of the detected object.
+This project implements a Extended Kalman filter to perform sensor fusion for estimating the state of a moving object. The Extended Kalman Filter allows for incorporating non-linear prediction and measurement models into the gaussian state estimation using the first order taylor series expansion of each function; as a result, you have to calculate the Jacobian for each non-linear predition or measurement function. The sensors used are radar and lidar, and because radar measurements are in polar coordinates the measurement model converts them to Cartesian coordinates and is non-linear. Although normally you have to detect the object of interest in the laser or radar measurement, for this project the measurements provided are already of the detected object.
 
 ## Results
 
