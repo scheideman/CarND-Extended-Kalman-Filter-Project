@@ -39,7 +39,6 @@ void KalmanFilter::Update(const VectorXd &z) {
 	long x_size = x_.size();
 	MatrixXd I = MatrixXd::Identity(x_size, x_size);
 	P_ = (I - K * H_) * P_;
-
 }
 
 // for radar
@@ -58,7 +57,9 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
     ro = 0.0001;
   }
 
-  z_pred << ro, phi, (px*vx + py*vy) / ro; 
+  float ro_dot = (px*vx + py*vy) / ro;
+
+  z_pred << ro, phi, ro_dot; 
 	VectorXd y = z - z_pred;
 	
   phi = y[1];

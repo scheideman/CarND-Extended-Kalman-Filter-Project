@@ -68,6 +68,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     //assume very little error in initial x and y 
     // but a lot more in vx, and vy
     ekf_.P_ = MatrixXd::Identity(4,4);
+    //ekf_.P_ = MatrixXd(4,4);
     ekf_.P_(2,2) = 1000;
     ekf_.P_(3,3) = 1000;
 
@@ -78,10 +79,10 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       float ro = measurement_pack.raw_measurements_[0];
       float phi = measurement_pack.raw_measurements_[1];
       
-      ekf_.x_[0] = sin(phi) * ro;
-      ekf_.x_[1] = cos(phi) * ro;
-      ekf_.x_[2] = 0;
-      ekf_.x_[3] = 0;
+      ekf_.x_[0] = cos(phi) * ro;
+      ekf_.x_[1] = sin(phi) * ro;
+      //ekf_.x_[2] = 0;
+      //ekf_.x_[3] = 0;
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
       /**
@@ -89,8 +90,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       */
       ekf_.x_[0] = measurement_pack.raw_measurements_[0];
       ekf_.x_[1] = measurement_pack.raw_measurements_[1];
-      ekf_.x_[2] = 0;
-      ekf_.x_[3] = 0;
+      //ekf_.x_[2] = 0;
+      //ekf_.x_[3] = 0;
     }
 
     // done initializing, no need to predict or update
@@ -131,6 +132,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 	      0, noise_ay;
 
 	ekf_.Q_ = G * Qv * G.transpose();
+
   ekf_.Predict();
 
   /*****************************************************************************
